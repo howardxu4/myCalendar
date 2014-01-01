@@ -1,0 +1,32 @@
+
+table.out{
+	border:1px solid black;
+    font-family: "Times New Roman",Times,serif;
+    font-size: 16px;
+    box-shadow: 5px 5px 2px #888888;
+}
+table.shead th, table.sbody td {
+    text-align: center;
+    padding: 4px;
+}
+th.prev:hover, th.post:hover,  th.look:hover, th.shift:hover, th.find:hover, th.range:hover {
+    background-color: #fae9e9;   
+}
+td.smon:hover, td.syear:hover, td.prev:hover, td.post:hover, td.curr:hover, td.tday:hover {
+    background-color: #fad4c9;
+}
+.prev, .post, .shift, .range{
+	background-color: #e5e8dc;
+}
+.curr, .look, .find {
+	background-color: #f7f0f2;
+}
+.smon, .syear {
+    height:65px;
+    width: 45px;
+    text-align: center;
+    background-color: #f7f0f2;
+}
+.tday {
+	background-color: #c5e6e8;
+}
