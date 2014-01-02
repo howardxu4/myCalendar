@@ -7,8 +7,8 @@ Contains
 --------
 
 * myCalendar.js 'javascript objsect'
-* myCalendar.css ''stylesheet to control look and feel'
-* myCalendar.htm' 'sample html'
+* myCalendar.css 'stylesheet to control look and feel'
+* myCalendar.htm 'sample html'
 
 Usage
 -----
