@@ -15,8 +15,8 @@ Usage
 * create the object with option parameter full-year, month (0-11), day
 * create a callback function with argument year, month, day API
 * call the myCalendar object init method with three parameter:
-** name of variable that hold the myCalendar object
-** the reference of element of div tag in document for show calendar
-** the reference of callback function for get selecting date
+<br/> 1.   name of variable that hold the myCalendar object
+<br/> 2.   the reference of element of div tag in document for show calendar
+<br/> 3.   the reference of callback function for get selecting date
 * call myCalendar object toggle method to show/hide the calendar
 
