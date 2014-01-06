@@ -18,7 +18,7 @@
  */
 
 function myCalendar(y, m, d) {
-   	var Months = ['January', 'Febrary', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December']
+    var Months = ['January', 'Febrary', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December']
     var Mons = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec']
     var Week = ['Su', 'Mo', 'Tu', 'We', 'Th', 'Fr', 'Sa']
 
