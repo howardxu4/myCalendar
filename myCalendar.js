@@ -22,21 +22,21 @@ function myCalendar(y, m, d) {
     var Mons = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec']
     var Week = ['Su', 'Mo', 'Tu', 'We', 'Th', 'Fr', 'Sa']
 
-	this.getMonthData = function(year, month, date) {
-		var o = new Date();
-		if (year == undefined) year = o.getFullYear()
-		if (month == undefined) month = o.getMonth()
-		if (date == undefined) date = o.getDate()
-		o = new Date(year, month%12, date%32);
-		var y = o.getFullYear()
-		var m = o.getMonth()
-		var d = o.getDate()
-		o.setDate(0)
-		var dy = o.getDay()
-		var lm = o.getDate()
-		var ml = new Date( y, m+1, 0).getDate() 
-		return { Y:y, M:m , D:d, Dy:dy, Lm:lm, Ml:ml }
-	}
+    this.getMonthData = function(year, month, date) {
+	var o = new Date();
+	if (year == undefined) year = o.getFullYear()
+	if (month == undefined) month = o.getMonth()
+	if (date == undefined) date = o.getDate()
+	o = new Date(year, month%12, date%32);
+	var y = o.getFullYear()
+	var m = o.getMonth()
+	var d = o.getDate()
+	o.setDate(0)
+	var dy = o.getDay()
+	var lm = o.getDate()
+	var ml = new Date( y, m+1, 0).getDate() 
+	return { Y:y, M:m , D:d, Dy:dy, Lm:lm, Ml:ml }
+    }
     this.getCdata = function(c, cd) {
         var cls = ['prev', 'curr', 'post', 'tday', 'look', 'shift', 'smon', 'find', 'range', 'syear']
         return 'class="' + cls[c] +'" onclick="'+ this.myObj + '.getCall(' + c + ',' + cd + ')" '     
@@ -53,8 +53,8 @@ function myCalendar(y, m, d) {
     this.getYearCal = function(y) {
         y -= (y%10)
         var ss = '<table class="out"><tr><td><table class="shead"><tr><th ' + this.getCdata(8, y-10)
-        ss +=' ><<</th><th width="140"> ' + y +'--' + (y+9) +' </th><th ' + this.getCdata(8, y+10)
-        ss +=' >>></th></tr></table class="sbody"></td></tr>'
+        ss +=' >&laquo;&nbsp;</th><th width="144"> ' + y +'--' + (y+9) +' </th><th ' + this.getCdata(8, y+10)
+        ss +=' >&nbsp;&raquo;</th></tr></table class="sbody"></td></tr>'
         var tt = '<tr>'
         y--
         for (i=0; i<12; i++) {
@@ -68,8 +68,8 @@ function myCalendar(y, m, d) {
     }
     this.getMonCal = function(y) {
         var ss = '<table class="out"><tr><td><table class="shead"><tr><th ' + this.getCdata(5, y-1)
-        ss +=' ><<</th><th width="140" ' + this.getCdata(7, y) + ' > ' + y +' </th><th ' + this.getCdata(5, y+1)
-        ss +=' >>></th></tr></table class="sbody"></td></tr>'
+        ss +=' >&laquo;&nbsp;</th><th width="144" ' + this.getCdata(7, y) + ' > ' + y +' </th><th ' + this.getCdata(5, y+1)
+        ss +=' >&nbsp;&raquo;</th></tr></table class="sbody"></td></tr>'
         var tt = '<tr>'
         for (var i=0; i<12; i++) {
             tt += '<td ' + this.getCdata(6, i) + '>' + Mons[i] + '</td>'
@@ -82,8 +82,8 @@ function myCalendar(y, m, d) {
     this.getMonthCal = function(data) {
         var c = 0
         var ss = '<table class="out"><tr><td><table class="shead"><tr><th ' +  this.getCdata(0, data.D) 
-        ss +=' ><<</th><th width="140" ' + this.getCdata(4, data.Y) + ' > '+Months[data.M] +', '+data.Y+' </th><th '
-        ss +=this.getCdata(2, data.D) +' >>></th></tr></table></td></tr>'
+        ss +=' >&laquo;&nbsp;</th><th width="144" ' + this.getCdata(4, data.Y) + ' > '+Months[data.M] +', '+data.Y+' </th><th '
+        ss +=this.getCdata(2, data.D) +' >&nbsp;&raquo;</th></tr></table></td></tr>'
         var tt = '<tr>'
         for (var i=0; i<7; i++)
             tt += '<th>' + Week[i] + '</th>'
@@ -104,20 +104,20 @@ function myCalendar(y, m, d) {
         ss += tt + '</tr></table></td></tr></table>'
         return ss
     }        
-	this.getCall = function(c, cd) {
-		switch(c) {
+    this.getCall = function(c, cd) {
+	switch(c) {
             case 0:
             case 2:
-		        var m = this.myData.M 
-			    var y = this.myData.Y
-			    if (c == 0) m--; 
-			    else m++
-			    if (m < 0) { y--; m = 11 }
-			    else if(m > 11) { y++; m = 0 }
-			    this.myData = this.getMonthData(y, m, cd)
-			    this.updateUI(this.getMonthCal( this.myData ))
-		    break;
-		    case 1:
+    		var m = this.myData.M 
+    		var y = this.myData.Y
+		if (c == 0) m--; 
+		else m++
+		if (m < 0) { y--; m = 11 }
+		else if(m > 11) { y++; m = 0 }
+		this.myData = this.getMonthData(y, m, cd)
+		this.updateUI(this.getMonthCal( this.myData ))
+	    break;
+	    case 1:
             case 3:
                 this.myCallback(this.myData.Y, this.myData.M, cd)
             break
@@ -140,7 +140,7 @@ function myCalendar(y, m, d) {
                 this.updateUI(this.getMonCal(cd))
             break;
         }
-	}
+    }
     this.init = function(name, elm, clbk) {
         if (this.myObj == '') {
             this.myObj = name

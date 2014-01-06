@@ -1,27 +1,26 @@
 <!DOCTYPE html>
 <html><head>
-	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-	<meta http-equiv="cache-control" content="public">
-	<meta name="description" content="CALENDAR2.0 Page">
-	<meta name="authors" content="Howard Xu">
-	<title>CALENDAR 1.0 Page</title>
-
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <meta http-equiv="cache-control" content="public">
+    <meta name="description" content="CALENDAR2.0 Page">
+    <meta name="authors" content="Howard Xu">
+    <title>CALENDAR 1.0 Page</title>
     <link href="myCalendar.css" rel="stylesheet" type="text/css" media="screen">
     <script src="myCalendar.js" type="text/javascript"> </script>
-
     <script type="text/javascript">
     // 1. create the object with option parameter full-year, month (0-11), day
     //      default value is the current date
-        mycal = new myCalendar()
-        secal = new myCalendar(2014,0,8)
+    	mycal = new myCalendar()
+        secal = new myCalendar(2014,0,22)
     // 2. create a callback function with argument year, month, day API    
         function callback(y,m,d) {
             mycal.toggle() 
-            alert( "Selected Date:  " + Date(y, m, d))
+            dt = new Date(y,m,d)
+            document.getElementById('info').innerHTML = "Selected Date:  " + dt.toDateString()
         }        
         function callback1(y,m,d) {
             secal.toggle('none')
-            alert( "Returned data: " + y + " ," + m + ", " + d)
+            document.getElementById('date').value = '' + y +'/' + (m+1) + '/' + d
         }
     // 3. call the myCalendar object init method with three parameter:
     //      name of variable that hold the myCalendar object
@@ -49,12 +48,12 @@
     </script>
 </head>
 <body onload='init()'>
-    <br><br><br><br>
+    <br><br><span id='info'></span><br><br>
     <div id="first">
-	   <button onclick="callme()" >Hit Me</button>
+        <button onclick="callme()" >Select a date</button>
     </div>
     <div id="second" style="position: relative; float: left; top: -20px; left: 300px">
-       <button onclick="callme(1)" >Try It</button>
+        <input id='date' type='text' onclick="callme(1)" ></input>    
     </div>
     <div id='cal' style="position: absolute"> </div>    
     <div id='cal1' style="position: absolute"> </div>
