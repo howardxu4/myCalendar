@@ -7,7 +7,7 @@
  *  1. create the object with option parameter full-year, month (0-11), day
  *     default value is the current date
  *  2. create a callback function with argument year, month, day API
- *      e.g. function callback(y,m,d) { alert( "selected date: " + Date(y,m,d)) }
+ *      e.g. function callback(y,m,d) { alert( "selected date: " + y + '/' + (m + 1) + '/' + d) }
  *  3. call the myCalendar object init method with three parameter:
  *      name of variable that hold the myCalendar object
  *      the reference of element of div tag in document for show calendar
