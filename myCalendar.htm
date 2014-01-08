@@ -13,12 +13,12 @@
     	mycal = new myCalendar()
         secal = new myCalendar(2014,0,22)
     // 2. create a callback function with argument year, month, day API    
-        function callback(y,m,d) {
+        function mycallback(y,m,d) {
             mycal.toggle() 
             dt = new Date(y,m,d)
             document.getElementById('info').innerHTML = "Selected Date:  " + dt.toDateString()
         }        
-        function callback1(y,m,d) {
+        function secallback(y,m,d) {
             secal.toggle('none')
             document.getElementById('date').value = '' + y +'/' + (m+1) + '/' + d
         }
@@ -28,11 +28,13 @@
     //      the reference of callback function get selecting date
     //    this will show up th month of calendar inside div tag and ready to select (toggle inside) 
     //    toggle without parameter do auto toggle, otherwise use 'block' or 'none' to turn on/off
-     	function callme(n) {
-            if (n == undefined)
-                mycal.init( "mycal", document.getElementById('cal'), callback ) 
-            else
-                secal.init( "secal", document.getElementById('cal1'), callback1 )
+     	function callme(objid, calid, n) {
+            position(objid, calid)             
+            mycal.init( "mycal", document.getElementById(calid), mycallback )
+        }
+        function callsec(objid, calid) {
+            position(objid, calid)
+            secal.init( "secal", document.getElementById(calid), secallback )
     	}
         function position(id, pop) {
             var el = document.getElementById(id);for (var lx=0, ly=0; el != null;
@@ -41,20 +43,17 @@
             m.style.left = '' + (lx + 20) + 'px'
             m.style.top = '' + (ly + 30) +'px'
         }
-        function init() {
-            position("first", "cal")
-            position("second", "cal1")
-        }
     </script>
 </head>
-<body onload='init()'>
+<body>
     <br><br><span id='info'></span><br><br>
     <div id="first">
-        <button onclick="callme()" >Select a date</button>
+        <button onclick="callme('first', 'cal')" >Select a date</button>
     </div>
-    <div id="second" style="position: relative; float: left; top: -20px; left: 300px">
-        <input id='date' type='text' onclick="callme(1)" ></input>    
+    <div id="second" style="position: relative; float: left; top: -25px; left: 300px">
+        <input id='date' type='text' onclick="callsec('second', 'cal1')" ></input>    
     </div>
+
     <div id='cal' style="position: absolute"> </div>    
     <div id='cal1' style="position: absolute"> </div>
 </body></html>
