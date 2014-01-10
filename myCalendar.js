@@ -5,16 +5,17 @@
  *
  *  The myCalendar object provides a simple API to get selecting date
  *  1. create the object with option parameter full-year, month (0-11), day
- *     default value is the current date
- *  2. create a callback function with argument year, month, day API
- *      e.g. function callback(y,m,d) { alert( "selected date: " + y + '/' + (m + 1) + '/' + d) }
- *  3. call the myCalendar object init method with three parameter:
+ *      default value is the current date
+ *  2. create a callback function with argument year, month, day API (default callback works for tag input type=text) 
+ *      e.g. function callback(y,m,d) { v.toggle(); alert( "selected date: " + y + '/' + (m + 1) + '/' + d) }
+ *  3. call the myCalendar object init method with tnree parameter:
  *      name of variable that hold the myCalendar object
- *      the reference of element of div tag in document for show calendar
- *      the reference of callback function for get selecting date
- *     this will show up th month of calendar inside div tag and ready to select (toggle inside)
+ *      the reference of element tag in document for show calendar
+ *      the reference of callback function get selecting date (optional on tag input text)
+ *      this will show up th month of calendar under your tag and ready for selecting (toggle inside)
  *  4. call myCalendar object toggle method to show/hide the calendar, without parameter do auto toggle 
- *  To adjust look and feel please modify the style classes defined in CSS stylesheet
+ *  5. call myCalendar object setPos method to change relative position of calendar (default: 10, 10)
+ *  To adjust look and feel you can modify the style classes defined in CSS stylesheet
  */
 
 function myCalendar(y, m, d) {
@@ -23,28 +24,51 @@ function myCalendar(y, m, d) {
     var Week = ['Su', 'Mo', 'Tu', 'We', 'Th', 'Fr', 'Sa']
 
     this.getMonthData = function(year, month, date) {
-	var o = new Date();
-	if (year == undefined) year = o.getFullYear()
-	if (month == undefined) month = o.getMonth()
-	if (date == undefined) date = o.getDate()
-	o = new Date(year, month%12, date%32);
-	var y = o.getFullYear()
-	var m = o.getMonth()
-	var d = o.getDate()
-	o.setDate(0)
-	var dy = o.getDay()
-	var lm = o.getDate()
-	var ml = new Date( y, m+1, 0).getDate() 
-	return { Y:y, M:m , D:d, Dy:dy, Lm:lm, Ml:ml }
+        var o = new Date();
+        if (year == undefined) year = o.getFullYear()
+        if (month == undefined) month = o.getMonth()
+        if (date == undefined) date = o.getDate()
+        o = new Date(year, month%12, date%32);
+        var y = o.getFullYear()
+        var m = o.getMonth()
+        var d = o.getDate()
+        o.setDate(0)
+        var dy = o.getDay()
+        var lm = o.getDate()
+        var ml = new Date( y, m+1, 0).getDate() 
+        return { Y:y, M:m , D:d, Dy:dy, Lm:lm, Ml:ml }
     }
     this.getCdata = function(c, cd) {
         var cls = ['prev', 'curr', 'post', 'tday', 'look', 'shift', 'smon', 'find', 'range', 'syear']
         return 'class="' + cls[c] +'" onclick="'+ this.myObj + '.getCall(' + c + ',' + cd + ')" '     
-    }        
+    }   
+    this.getFuncStr = function(x, y) {
+        s = "document.onclick=function(e) { "
+        s += "try{ if ( e.pageX < " +  x + " || e.pageY < " + y + " || e.pageX > (" + x + " + "
+        s += this.myObj + ".myElm.clientWidth ) || e.pageY > (" + y + " + "
+        s += this.myObj + ".myElm.clientHeight )) { "
+        s += "if (" + this.myObj + ".count > 0) " + this.myObj + ".toggle('none');"
+        s += "else " + this.myObj + ".count = 1; } } "
+        s += "catch(err){" + this.myObj + ".toggle('none');} }"
+        return s
+    }
+    this.adjust = function() {
+        var el = this.myTarget;for (var lx=0, ly=0, h=el.offsetHeight; el != null;
+            lx += el.offsetLeft, ly += el.offsetTop, el = el.offsetParent);
+        this.myElm.style.left = '' + (lx+this.deltax) + 'px'
+        this.myElm.style.top = '' + (ly+this.deltay+h) + 'px' 
+        if (document.onclick != null) document.onclick();
+        eval(this.getFuncStr((lx+this.deltax), (ly+this.deltay+h)))
+    }
+    this.setPos = function(x, y) {
+        this.deltax = x;
+        this.deltay = y
+    }
     this.toggle = function(stat) {
-        if (stat == undefined) 
-            stat = (this.myElm.style.display == 'block')? 'none' : 'block'
+        if (stat == undefined) stat = (this.myElm.style.display == 'block')? 'none' : 'block'
         else if (stat != 'block') stat = 'none'
+        if (stat == 'block') this.adjust()
+        else { document.onclick=null; this.count = 0 }
         this.myElm.style.display = stat
     }
     this.updateUI = function(s) {
@@ -56,14 +80,11 @@ function myCalendar(y, m, d) {
         ss +=' >&laquo;&nbsp;</th><th width="144"> ' + y +'--' + (y+9) +' </th><th ' + this.getCdata(8, y+10)
         ss +=' >&nbsp;&raquo;</th></tr></table class="sbody"></td></tr>'
         var tt = '<tr>'
-        y--
-        for (i=0; i<12; i++) {
+        for (--y, i=0; i<12; i++, y++) {
             tt += '<td ' + this.getCdata(9, y) + '>' + y + '</td>'
             if ((i+1) %4 == 0) tt += '</tr>'
-            y++
         }
-        tt += '</tr>'
-        ss += '<tr><td> <center><table>' + tt + '</table></td></tr></table>'
+        ss += '<tr><td> <center><table>' + tt + '</tr></table></td></tr></table>'
         return ss
     }
     this.getMonCal = function(y) {
@@ -75,8 +96,7 @@ function myCalendar(y, m, d) {
             tt += '<td ' + this.getCdata(6, i) + '>' + Mons[i] + '</td>'
             if ((i+1) %4 == 0) tt += '</tr>'
         }
-        tt += '</tr>'
-        ss += '<tr><td> <center><table>' + tt + '</table></td></tr></table>'
+        ss += '<tr><td> <center><table>' + tt + '</tr></table></td></tr></table>'
         return ss
     }
     this.getMonthCal = function(data) {
@@ -87,8 +107,7 @@ function myCalendar(y, m, d) {
         var tt = '<tr>'
         for (var i=0; i<7; i++)
             tt += '<th>' + Week[i] + '</th>'
-        tt += '</tr>'
-        ss += '<tr><td> <center><table class="sbody">' + tt
+        ss += '<tr><td> <center><table class="sbody">' + tt + '</tr>'
         tt = '<tr>'
         var k = -(data.Dy + 7) % 7
         for (var i=0; i<42; i++, k++) {
@@ -105,24 +124,21 @@ function myCalendar(y, m, d) {
         return ss
     }        
     this.getCall = function(c, cd) {
-	switch(c) {
-            case 0:
-            case 2:
-    		var m = this.myData.M 
-    		var y = this.myData.Y
-		if (c == 0) m--; 
-		else m++
-		if (m < 0) { y--; m = 11 }
-		else if(m > 11) { y++; m = 0 }
-		this.myData = this.getMonthData(y, m, cd)
-		this.updateUI(this.getMonthCal( this.myData ))
-	    break;
-	    case 1:
-            case 3:
+	   switch(c) {
+            case 0: case 2:
+                var m = this.myData.M 
+                var y = this.myData.Y
+                if (c == 0) m--; 
+                else m++
+                if (m < 0) { y--; m = 11 }
+                else if(m > 11) { y++; m = 0 }
+                this.myData = this.getMonthData(y, m, cd)
+                this.updateUI(this.getMonthCal( this.myData ))
+            break;
+            case 1: case 3:
                 this.myCallback(this.myData.Y, this.myData.M, cd)
             break
-            case 4:
-            case 5:
+            case 4: case 5:
                 this.myYear = cd
                 this.updateUI(this.getMonCal(cd))
             break;
@@ -130,8 +146,7 @@ function myCalendar(y, m, d) {
                 this.myData = this.getMonthData(this.myYear, cd)
                 this.updateUI(this.getMonthCal( this.myData ))
             break;
-            case 7:
-            case 8:
+            case 7: case 8:
                 this.myYear = cd
                 this.updateUI(this.getYearCal(cd))
             break;
@@ -139,22 +154,37 @@ function myCalendar(y, m, d) {
                 this.myYear = cd
                 this.updateUI(this.getMonCal(cd))
             break;
+            default:
         }
+    }
+    this.createDiv = function(target) {
+        this.myTarget = target 
+        var div = document.createElement('div');
+        div.style.position = 'absolute'
+        div.style.zIndex = '5'
+        div.style.display = 'block'
+        document.body.appendChild(div);
+        this.myElm = div
+        this.adjust()
+    }
+    this.myCallback = function(y, m, d) {
+        this.toggle('none')
+        this.myTarget.value = '' + y +'/' + (m+1) + '/' + d
     }
     this.init = function(name, elm, clbk) {
         if (this.myObj == '') {
             this.myObj = name
-            this.myElm = elm
-            this.myCallback = clbk
-            this.myElm.style.display = 'block'
+            this.createDiv(elm)
+            if (clbk != undefined) this.myCallback = clbk 
             this.myElm.innerHTML = this.getMonthCal(this.myData)
         }
-        else
+        else 
             this.toggle()
     }
     this.myObj = ''
-    this.myElm = null
-    this.myCallback = null
     this.myData = this.getMonthData(y,m,d)
     this.myYear = this.myData.Y
+    this.deltax = 10
+    this.deltay = 10
+    this.count = 0
 }

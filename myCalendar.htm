@@ -2,7 +2,7 @@
 <html><head>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
     <meta http-equiv="cache-control" content="public">
-    <meta name="description" content="CALENDAR2.0 Page">
+    <meta name="description" content="CALENDAR 1.0 Page">
     <meta name="authors" content="Howard Xu">
     <title>CALENDAR 1.0 Page</title>
     <link href="myCalendar.css" rel="stylesheet" type="text/css" media="screen">
@@ -10,50 +10,41 @@
     <script type="text/javascript">
     // 1. create the object with option parameter full-year, month (0-11), day
     //      default value is the current date
-    	mycal = new myCalendar()
-        secal = new myCalendar(2014,0,22)
-    // 2. create a callback function with argument year, month, day API    
+    	mycal = new myCalendar(2014, 2, 18)
+        secal = new myCalendar()
+    //  setPos method to change relative position of calendar showing (default: 10, 10)    
+        mycal.setPos(100, -20)
+    // 2. create a callback function with argument year, month, day API (default callback works for tag input type=text) 
         function mycallback(y,m,d) {
-            mycal.toggle() 
+    //  toggle without parameter do auto toggle, otherwise use 'block' or 'none' to turn on/off
+            mycal.toggle('none')
             dt = new Date(y,m,d)
             document.getElementById('info').innerHTML = "Selected Date:  " + dt.toDateString()
         }        
-        function secallback(y,m,d) {
-            secal.toggle('none')
-            document.getElementById('date').value = '' + y +'/' + (m+1) + '/' + d
-        }
     // 3. call the myCalendar object init method with three parameter:
     //      name of variable that hold the myCalendar object
-    //      the reference of element of div tag in document for show calendar
-    //      the reference of callback function get selecting date
-    //    this will show up th month of calendar inside div tag and ready to select (toggle inside) 
+    //      the reference of element in document for show calendar
+    //      the reference of callback function which get selecting date (optional on tag input text)
+    //    this will show up the month of calendar under your tag and ready to selecting (toggle inside) 
     //    toggle without parameter do auto toggle, otherwise use 'block' or 'none' to turn on/off
-     	function callme(objid, calid, n) {
-            position(objid, calid)             
-            mycal.init( "mycal", document.getElementById(calid), mycallback )
+     	function callme(id) {      
+            // the mycal example showing all possible adjustments: 
+            // using other object to refer and provide the callback function
+            obj = document.getElementById(id)
+            mycal.init( "mycal", obj, mycallback )
         }
-        function callsec(objid, calid) {
-            position(objid, calid)
-            secal.init( "secal", document.getElementById(calid), secallback )
+        function callsec(obj) {
+            // using default callback with tag input type=text object
+            secal.init( "secal", obj )
     	}
-        function position(id, pop) {
-            var el = document.getElementById(id);for (var lx=0, ly=0; el != null;
-            lx += el.offsetLeft, ly += el.offsetTop, el = el.offsetParent);
-            m = document.getElementById(pop)
-            m.style.left = '' + (lx + 20) + 'px'
-            m.style.top = '' + (ly + 30) +'px'
-        }
     </script>
 </head>
 <body>
     <br><br><span id='info'></span><br><br>
     <div id="first">
-        <button onclick="callme('first', 'cal')" >Select a date</button>
+        <button onclick="callme('first')" >Select a date</button>
     </div>
-    <div id="second" style="position: relative; float: left; top: -25px; left: 300px">
-        <input id='date' type='text' onclick="callsec('second', 'cal1')" ></input>    
+    <div style="position: relative; float: left; top: -25px; left: 400px">
+        <input type='text' onclick="callsec(this)" ></input>    
     </div>
-
-    <div id='cal' style="position: absolute"> </div>    
-    <div id='cal1' style="position: absolute"> </div>
 </body></html>
