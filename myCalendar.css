@@ -55,7 +55,7 @@
  */
 
 table.pout{
-	border:1px solid black;
+    border:1px solid black;
     font-family: "Times New Roman",Times,serif;
     font-size: 16px;
     box-shadow: 5px 5px 2px #888888;
@@ -65,6 +65,12 @@ table.phead th, table.pbody td {
     text-align: center;
     padding: 4px;
 }
+.pprev:before {
+    content: "\ab";
+}
+.pnext:after {
+    content: "\bb";
+}
 th.pprev:hover, th.pnext:hover,  th.ptitle:hover {
     background-color: #fae9e9;   
 }
@@ -72,13 +78,13 @@ td.pmonth:hover, td.pyear:hover, td.plmday:hover, td.pnmday:hover, td.pday:hover
     background-color: #fad4c9;
 }
 .pprev, .pnext, .plmday, .pnmday {
-	background-color: #e5e8dc;
+    background-color: #e5e8dc;
 }
 .ptitle, .dtitle {
     width: 144px;
 }
 .pday, .ptitle {
-	background-color: #f7f0f2;
+    background-color: #f7f0f2;
 }
 .pmonth, .pyear {
     height:65px;
@@ -87,5 +93,5 @@ td.pmonth:hover, td.pyear:hover, td.plmday:hover, td.pnmday:hover, td.pday:hover
     background-color: #f7f0f2;
 }
 .psday {
-	background-color: #c5e6e8;
+    background-color: #c5e6e8;
 }

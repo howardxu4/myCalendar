@@ -17,7 +17,7 @@
  *      e.g. v.init('v', document.getElementById('date'), callback )
  *  4. call myCalendar object toggle method to show/hide the calendar, without parameter do auto toggle 
  *  5. call myCalendar object setPos method to change relative position of calendar (default: 10, 10)
- *
+ *  6. change the object.start setting (1/-1) to show weekday from Saturday/Monday 
  *  To adjust look and feel you can modify the style classes defined in CSS stylesheet
  */
 
@@ -80,8 +80,8 @@ function myCalendar(y, m, d) {
     this.getYearCal = function(y) {
         y -= (y%10)
         var ss = '<table class="pout"><tr><td><table class="phead"><tr><th ' + this.getCdata(0, 8, y-10)
-        ss +=' >&laquo;&nbsp;</th><th class="dtitle"> ' + y +'--' + (y+9) +' </th><th ' + this.getCdata(2, 8, y+10)
-        ss +=' >&nbsp;&raquo;</th></tr></table class="pbody"></td></tr>'
+        ss +=' >&nbsp;</th><th class="dtitle"> ' + y +'--' + (y+9) +' </th><th ' + this.getCdata(2, 8, y+10)
+        ss +=' >&nbsp;</th></tr></table class="pbody"></td></tr>'
         var tt = '<tr>'
         for (--y, i=0; i<12; i++, y++) {
             tt += '<td ' + this.getCdata(8, 9, y) + '>' + y + '</td>'
@@ -91,8 +91,8 @@ function myCalendar(y, m, d) {
     }
     this.getMonCal = function(y) {
         var ss = '<table class="pout"><tr><td><table class="phead"><tr><th ' + this.getCdata(0, 5, y-1)
-        ss +=' >&laquo;&nbsp;</th><th ' + this.getCdata(1, 7, y) + ' > ' + y +' </th><th ' + this.getCdata(2, 5, y+1)
-        ss +=' >&nbsp;&raquo;</th></tr></table class="pbody"></td></tr>'
+        ss +=' >&nbsp;</th><th ' + this.getCdata(1, 7, y) + ' > ' + y +' </th><th ' + this.getCdata(2, 5, y+1)
+        ss +=' >&nbsp;</th></tr></table class="pbody"></td></tr>'
         var tt = '<tr>'
         for (var i=0; i<12; i++) {
             tt += '<td ' + this.getCdata(7, 6, i) + '>' + Mons[i] + '</td>'
@@ -103,14 +103,14 @@ function myCalendar(y, m, d) {
     this.getMonthCal = function(data) {
         var c = 0
         var ss = '<table class="pout"><tr><td><table class="phead"><tr><th ' +  this.getCdata(0, 0, data.D) 
-        ss +=' >&laquo;&nbsp;</th><th ' + this.getCdata(1, 4, data.Y) + ' > '+Months[data.M] +', '+data.Y+' </th><th '
-        ss +=this.getCdata(2, 2, data.D) +' >&nbsp;&raquo;</th></tr></table></td></tr>'
+        ss +=' >&nbsp;</th><th ' + this.getCdata(1, 4, data.Y) + ' > '+Months[data.M] +', '+data.Y+' </th><th '
+        ss +=this.getCdata(2, 2, data.D) +' >&nbsp;</th></tr></table></td></tr>'
         var tt = '<tr>'
         for (var i=0; i<7; i++)
-            tt += '<th>' + Week[i] + '</th>'
+            tt += '<th>' + Week[((i - this.start) + 7) % 7] + '</th>'
         ss += '<tr><td> <center><table class="pbody">' + tt + '</tr>'
         tt = '<tr>'
-        var k = -(data.Dy + 7) % 7
+        var k = -(this.start + data.Dy + 7) % 7
         for (var i=0; i<42; i++, k++) {
             cd = (k<1)? (data.Lm+k):k 
             if (k == data.D && c == 1) 
@@ -184,7 +184,7 @@ function myCalendar(y, m, d) {
     this.myObj = ''
     this.myData = this.getMonthData(y,m,d)
     this.myYear = this.myData.Y
-    this.deltax = 10
-    this.deltay = 10
+    this.deltax = this.deltay = 10
     this.count = 0
+    this.start = 0      // Start from Monday (-1), Sunday (0), Saturday (1) 
 }
