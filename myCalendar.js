@@ -8,24 +8,22 @@
  *      default value is the current date
  *      e.g.  v = new myCalendar()
  *  2. create a callback function with argument year, month, day API (default callback works for tag input type=text) 
- *      e.g. function callback(y,m,d) { v.toggle(); alert( "selected date: " + (m + 1) + '/' + d + '/' + y) }
+ *      e.g. function callback(y,m,d) { alert( "selected date: " + (m + 1) + '/' + d + '/' + y) }
  *  3. call the myCalendar object init method with tnree parameter:
  *      name of variable that hold the myCalendar object
  *      the reference of element tag in document for show calendar
  *      the reference of callback function get selecting date (optional on tag input text)
  *      this will show up th month of calendar under your tag and ready for selecting (toggle inside)
  *      e.g. v.init('v', document.getElementById('date'), callback )
- *  4. call myCalendar object toggle method to show/hide the calendar, without parameter do auto toggle 
- *  5. call myCalendar object setPos method to change relative position of calendar (default: 10, 10)
- *  6. change the object.start setting (1/-1) to show weekday from Saturday/Monday 
+ *  4. call myCalendar object setPos method to change relative position of calendar (default: 10, 10)
+ *  5. call myCalendar object setBegin with [1|-1] to show weekday from Saturday or Monday 
+ *
  *  To adjust look and feel you can modify the style classes defined in CSS stylesheet
  */
-
 function myCalendar(y, m, d) {
     var Months = ['January', 'Febrary', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December']
     var Mons = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec']
     var Week = ['Su', 'Mo', 'Tu', 'We', 'Th', 'Fr', 'Sa']
-
     this.getMonthData = function(year, month, date) {
         var o = new Date();
         if (year == undefined) year = o.getFullYear()
@@ -52,8 +50,7 @@ function myCalendar(y, m, d) {
         s += this.myObj + ".myElm.clientHeight )) { "
         s += "if (" + this.myObj + ".count > 0) " + this.myObj + ".toggle('none');"
         s += "else " + this.myObj + ".count = 1; } } "
-        s += "catch(err){" + this.myObj + ".toggle('none');} }"
-        return s
+        return s + "catch(err){" + this.myObj + ".toggle('none');} }"
     }
     this.adjust = function() {
         var el = this.myTarget;for (var lx=0, ly=0, h=el.offsetHeight; el != null;
@@ -62,10 +59,6 @@ function myCalendar(y, m, d) {
         this.myElm.style.top = '' + (ly+this.deltay+h) + 'px' 
         if (document.onclick != null) document.onclick();
         eval(this.getFuncStr((lx+this.deltax), (ly+this.deltay+h)))
-    }
-    this.setPos = function(x, y) {
-        this.deltax = x;
-        this.deltay = y
     }
     this.toggle = function(stat) {
         if (stat == undefined) stat = (this.myElm.style.display == 'block')? 'none' : 'block'
@@ -139,8 +132,9 @@ function myCalendar(y, m, d) {
             break;
             case 1: case 3:
                 this.myData.D = cd;
-                this.updateUI(this.getMonthCal(this.myData ))
-                this.myCallback(this.myData.Y, this.myData.M, cd)
+                this.updateUI(this.getMonthCal(this.myData))
+                this.toggle('none')
+                this.myCallback(this.myData.Y, this.myData.M, this.myData.D)
             break
             case 4: case 5: case 9:
                 this.myYear = cd
@@ -168,7 +162,6 @@ function myCalendar(y, m, d) {
         this.adjust()
     }
     this.myCallback = function(y, m, d) {
-        this.toggle('none')
         this.myTarget.value = '' + (m+1) + '/' + d + '/' + y
     }
     this.init = function(name, elm, clbk) {
@@ -180,6 +173,13 @@ function myCalendar(y, m, d) {
         }
         else 
             this.toggle()
+    }
+    this.setBegin = function(n) {
+        this.start = (n % 2) 
+    }        
+    this.setPos = function(x, y) {
+        this.deltax = x;
+        this.deltay = y
     }
     this.myObj = ''
     this.myData = this.getMonthData(y,m,d)

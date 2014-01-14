@@ -1,7 +1,7 @@
 myCalendar
 ==========
 
-This is a javascript object which provides a simple API to get selecting date 
+This is a javascript object which provides a simple API of date picker 
 
 Contains
 --------
@@ -18,7 +18,8 @@ Usage
 <br/> 1.   name of variable that hold the myCalendar object
 <br/> 2.   the reference of element of tag in document for show calendar
 <br/> 3.   the reference of callback function for get selecting date
-* call myCalendar object toggle method to show/hide the calendar
-* call myCalendar object setPos method to change relative position 
-* detail sample refer to myCalendar.htm
+* call myCalendar object setBegin method to change the begin week day
+* call myCalendar object setPos method to change relative position
+* adjusting look and feel modify the style classes defined in myCalendar.css
+* detail usage refer the sample myCalendar.htm
 
