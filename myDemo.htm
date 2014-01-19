@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html>
+<head>
+<!--
+/*
+ *                      myCalendar Object
+ *                      January 17, 2014
+ *                          Howard Xu
+ *
+ *   This demo uses myCalendar, myClock and myUtils objects for date time picker
+ *   To adjust time using mouse to select clock hand and turn around 
+ */
+-->
+
+<link href="myDemo.css" rel="stylesheet" type="text/css" media="screen">
+<script src="myCalendar.js" type="text/javascript"> </script>
+<script src="myClock.js" type='text/javascript'></script>
+<script src="myUtils.js" type='text/javascript'></script>
+<script>
+    var mytim, tmer, h, m, s, dt, info, cnvs, dg;
+    var stat = 0
+    function reset() {
+        dt = new Date()
+        h = dt.getHours()
+        m = dt.getMinutes()
+        s = dt.getSeconds()
+    }
+    function startClock () {
+        s++
+        if (s == 60) {
+            s = 0;
+            m++
+            if (m == 60) {
+                m = 0;
+                h = (h+1)%24
+            }
+        }
+        mytim.setTime(h,m,s);
+        mytim.drawAll()
+        tmer = setTimeout(startClock,1000);
+    }
+    function show(s) {
+        info.innerHTML = s
+    }
+    function mycallback(y,mon,d) {
+        dt = new Date(y,mon,d, h, m, s)
+        info.innerHTML = dt
+    }
+    function init() {
+        mycal = new myCalendar();
+        mycal.unsetAuto()
+        mycal.setPos(100, -100)
+        obj = document.getElementById("cal")
+        mycal.init( "mycal", obj, mycallback )
+        
+        info = document.getElementById('info')
+        cnvs = document.getElementById('myCanvas')
+        mytim = new myClock("myCanvas")
+        reset()
+        mytim.setTime(h,m,s)      
+        startClock()
+        Utils.popPos(cnvs, 0, 170)
+    }      
+    function down(event) {
+        var pos = Utils.findOffset(cnvs)
+        var px = event.clientX - pos.x - mytim.cx 
+        var py = event.clientY - pos.y - mytim.cy
+        stat = 0
+        var lpos = mytim.getPoint(mytim.rh, mytim.h*30 + mytim.m/2)
+        if (Utils.ptOnLine(px,py, -lpos.x, -lpos.y)){
+            dg = Utils.getDegree(px, py, mytim.r)
+            stat = 1
+        }
+        else {
+            lpos = mytim.getPoint(mytim.rm, mytim.m * 6)
+            if (Utils.ptOnLine(px,py, -lpos.x, -lpos.y)) {
+                dg = Utils.getDegree(px, py, mytim.rm)
+                stat = 2
+            }
+        }
+        if (stat) {
+            Utils.popHide()
+            ss = 'Turn around the ' + (stat==1?'Hour':'Minute') + ' hand to adjust time'
+            show(ss)
+        }
+    }
+    function move(event) {
+        if (stat) {
+            var pos = Utils.findOffset(cnvs)
+            var d = Utils.getDegree(event.clientX - pos.x - mytim.cx, event.clientY - pos.y - mytim.cy, mytim.r)
+            if (d != false) {
+                if (stat == 1) {
+                    h = Math.floor(d / 30)
+                    m = (d % 30) * 2
+                }
+                else {
+                    m = Math.floor(d / 6)
+                    if ( d < 30 && dg > 300) h = (h+1)%24
+                    else if(d > 300 && dg < 30) h = (h -1 + 24)%24
+                }
+                mytim.setTime(h,m,s)
+                mytim.drawAll()
+                dg = d
+            }
+        } 
+    }
+    function minout(io) {
+        if (io) Utils.popShow("To adjust time, select the clock hand to ture around")
+        else Utils.popHide()
+    }
+    function up(event) {
+        show(' ')
+        stat = 0
+    }
+</script>
+</head>
+<body onload='init()' >
+<div id="cal" onmouseup="up(event)">
+<div id="info" ></div>
+<canvas id="myCanvas" width="130" height="160" onmousedown="down(event)" onmousemove="move(event)" onmouseout="minout(0)" onmouseover="minout(1)">
+Your browser does not support the HTML5 canvas tag.</canvas>
+<button onclick='reset()'>Reset Time</button>    
+</div>
+
+</body>
+</html>

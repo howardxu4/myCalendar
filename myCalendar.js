@@ -17,6 +17,7 @@
  *      e.g. v.init('v', document.getElementById('date'), callback )
  *  4. call myCalendar object setPos method to change relative position of calendar (default: 10, 10)
  *  5. call myCalendar object setBegin with [1|-1] to show weekday from Saturday or Monday 
+ *  6. call myCalendar object unsetAuto to turn off the feature of auto close on popup
  *
  *  To adjust look and feel you can modify the style classes defined in CSS stylesheet
  */
@@ -57,14 +58,16 @@ function myCalendar(y, m, d) {
             lx += el.offsetLeft, ly += el.offsetTop, el = el.offsetParent);
         this.myElm.style.left = '' + (lx+this.deltax) + 'px'
         this.myElm.style.top = '' + (ly+this.deltay+h) + 'px' 
-        if (document.onclick != null) document.onclick();
-        eval(this.getFuncStr((lx+this.deltax), (ly+this.deltay+h)))
+        if (this.auto) {
+            if (document.onclick != null) document.onclick();
+            eval(this.getFuncStr((lx+this.deltax), (ly+this.deltay+h)))
+        }
     }
     this.toggle = function(stat) {
         if (stat == undefined) stat = (this.myElm.style.display == 'block')? 'none' : 'block'
         else if (stat != 'block') stat = 'none'
         if (stat == 'block') this.adjust()
-        else { document.onclick=null; this.count = 0 }
+        else if (this.auto) { document.onclick=null; this.count = 0 }
         this.myElm.style.display = stat
     }
     this.updateUI = function(s) {
@@ -133,7 +136,7 @@ function myCalendar(y, m, d) {
             case 1: case 3:
                 this.myData.D = cd;
                 this.updateUI(this.getMonthCal(this.myData))
-                this.toggle('none')
+                if (this.auto) this.toggle('none')
                 this.myCallback(this.myData.Y, this.myData.M, this.myData.D)
             break
             case 4: case 5: case 9:
@@ -174,17 +177,14 @@ function myCalendar(y, m, d) {
         else 
             this.toggle()
     }
-    this.setBegin = function(n) {
-        this.start = (n % 2) 
-    }        
-    this.setPos = function(x, y) {
-        this.deltax = x;
-        this.deltay = y
-    }
+    this.setBegin = function(n) { this.start = (n % 2) }
+    this.unsetAuto = function() { this.auto = false }
+    this.setPos = function(x, y) { this.deltax = x;    this.deltay = y }
     this.myObj = ''
     this.myData = this.getMonthData(y,m,d)
     this.myYear = this.myData.Y
     this.deltax = this.deltay = 10
+    this.auto = true
     this.count = 0
     this.start = 0      // Start from Monday (-1), Sunday (0), Saturday (1) 
 }

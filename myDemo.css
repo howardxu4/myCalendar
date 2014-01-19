@@ -1,0 +1,128 @@
+/*
+ *                      myCalendar Object
+ *                      December 27, 2013
+ *                          Howard Xu
+ *
+ *  The myCalendar object using the layout as following class names:
+ *
+ *      -------------------------------------------
+ *      | --------------------------------------- |
+ *      | |pprev|       p[d]title         |pnext| | <-- phead
+ *      | --------------------------------------- |
+ *      |-----------------------------------------|
+ *      | --------------------------------------- |   <-- pout
+ *      | |                                     | |
+ *      | |                                     | | <--  pbody
+ *      | |                                     | |
+ *      | |                                     | |
+ *      | |                                     | |
+ *      | |                                     | |
+ *      | |                                     | |
+ *      | --------------------------------------- |
+ *      -------------------------------------------
+ *  pout table contains phead table and pbody table
+ *  phead table contains th: pprev, ptitle or dtitle, pnext 
+ *
+ *        --------------------------------------- 
+ *        |           pweek                     | 
+ *        |-------------------------------------|
+ *        | plmday |         pday               | 
+ *        | -------                             | 
+ *        |                 -------             | 
+ *        |                 |psday|             | 
+ *        |                 -------             | 
+ *        |                           --------- | 
+ *        |                          |  pnmday  | 
+ *        --------------------------------------- 
+ *  on month calendar, pbody table contains 7 rows with 7 cols
+ *      first row contains 7 pweek th
+ *      rest rows contains td: plmday, pday, psday, pnmday
+ *      [ lastmonth-day, day, select-day, nextmonth-day ]
+ *
+ *        --------------------------------------- 
+ *        |        |  pmonth |         |        | 
+ *        |        |  /pyear |         |        | 
+ *        |-------------------------------------| 
+ *        |        |         |         |        | 
+ *        |        |         |         |        | 
+ *        |-------------------------------------| 
+ *        |        |         |         |        | 
+ *        |        |         |         |        | 
+ *        ---------------------------------------
+ *  on month and year calendar, pbody contains 3 rows with 4 cols
+ *      each td using pmonth or pyear
+ *
+ */
+
+table.pout{
+    border:1px solid black;
+    font-family: "courier new",courier,serif;
+    font-size: 16px;
+    box-shadow: 5px 5px 2px #888888;
+    background-color:#fff;
+}
+table.phead th, table.pbody td {
+    text-align: center;
+    padding: 4px;
+    padding-left: 8px;
+    padding-right: 8px; 
+}
+.pprev:before {
+    content: "\ab";
+}
+.pnext:after {
+    content: "\bb";
+}
+th.pprev:hover, th.pnext:hover,  th.ptitle:hover {
+    background-color: #d1e2f3; 
+    font-weight: bold;
+}
+td.pmonth:hover, td.pyear:hover, td.pday:hover, td.psday:hover {
+    background-color: #c1d2e3;
+    font-weight: bold;
+}
+td.plmday:hover, td.pnmday:hover {
+    color: #51a2ff;
+    font-weight: bold;
+}
+.pprev, .pnext {
+    background-color: #e5e8dc;    
+}
+.plmday, .pnmday {
+    color: #bcbcbc;
+}
+.ptitle, .dtitle {
+    width: 180px;
+}
+.pday, .ptitle {
+    background-color: #f1f0f2;
+}
+.pmonth, .pyear {
+    height:60px;
+    width: 64px;
+    text-align: center;
+    background-color: #f1f0f2;
+    
+}
+.psday {
+    background-color: #c5e6e8;
+}
+
+/*
+ *    myClock 
+ */
+#myCanvas {
+    position: relative; 
+    top: 100px;
+    left: 450px; 
+}
+#info {
+    position: absolute;
+    top: 20px;
+    left: 200px;
+}
+button {
+    position: relative;
+    top: 200px;
+    left: 200px;
+}
