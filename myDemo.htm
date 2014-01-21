@@ -43,18 +43,18 @@
         mytim.drawAll()
         tmer = setTimeout(startClock,1000);
     }
-    function show(s) {
-        info.innerHTML = s
+    function show(msg) {
+        info.innerHTML = msg
     }
     function mycallback(y,mon,d) {
         dt = new Date(y,mon,d, h, m, s)
         info.innerHTML = dt
     }
     function init() {
-        mycal = new myCalendar();
+        var mycal = new myCalendar();
         mycal.unsetAuto()
         mycal.setPos(100, -100)
-        obj = document.getElementById("cal")
+        var obj = document.getElementById("cal")
         mycal.init( "mycal", obj, mycallback )
         
         info = document.getElementById('info')
@@ -84,8 +84,8 @@
         }
         if (stat) {
             Utils.popHide()
-            ss = 'Turn around the ' + (stat==1?'Hour':'Minute') + ' hand to adjust time'
-            show(ss)
+            var msg = 'Turn around the ' + (stat==1?'Hour':'Minute') + ' hand to adjust time'
+            show(msg)
         }
     }
     function move(event) {
