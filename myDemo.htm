@@ -21,7 +21,7 @@
 <script src="myClock.js" type='text/javascript'></script>
 <script src="myUtils.js" type='text/javascript'></script>
 <script>
-    var mytim, tmer, h, m, s, dt, info, cnvs, dg;
+    var mycal, mytim, tmer, h, m, s, dt, info, cnvs, dg;
     var stat = 0
     function reset() {
         dt = new Date()
@@ -48,50 +48,50 @@
     }
     function mycallback(y,mon,d) {
         dt = new Date(y,mon,d, h, m, s)
-        info.innerHTML = dt
+        show( dt )
     }
     function init() {
-        var mycal = new myCalendar();
+        mycal = new myCalendar();
         mycal.unsetAuto()
         mycal.setPos(100, -100)
         var obj = document.getElementById("cal")
         mycal.init( "mycal", obj, mycallback )
-        
+    
         info = document.getElementById('info')
         cnvs = document.getElementById('myCanvas')
         mytim = new myClock("myCanvas")
         reset()
         mytim.setTime(h,m,s)      
         startClock()
-        Utils.popPos(cnvs, 0, 170)
+        myUtils.popPos(cnvs, 0, 170)
     }      
     function down(event) {
-        var pos = Utils.findOffset(cnvs)
+        var pos = myUtils.findOffset(cnvs)
         var px = event.clientX - pos.x - mytim.cx 
         var py = event.clientY - pos.y - mytim.cy
         stat = 0
         var lpos = mytim.getPoint(mytim.rh, mytim.h*30 + mytim.m/2)
-        if (Utils.ptOnLine(px,py, -lpos.x, -lpos.y)){
-            dg = Utils.getDegree(px, py, mytim.r)
+        if (myUtils.ptOnLine(px,py, -lpos.x, -lpos.y)){
+            dg = myUtils.getDegree(px, py, mytim.r)
             stat = 1
         }
         else {
             lpos = mytim.getPoint(mytim.rm, mytim.m * 6)
-            if (Utils.ptOnLine(px,py, -lpos.x, -lpos.y)) {
-                dg = Utils.getDegree(px, py, mytim.rm)
+            if (myUtils.ptOnLine(px,py, -lpos.x, -lpos.y)) {
+                dg = myUtils.getDegree(px, py, mytim.rm)
                 stat = 2
             }
         }
         if (stat) {
-            Utils.popHide()
+            myUtils.popHide()
             var msg = 'Turn around the ' + (stat==1?'Hour':'Minute') + ' hand to adjust time'
             show(msg)
         }
     }
     function move(event) {
         if (stat) {
-            var pos = Utils.findOffset(cnvs)
-            var d = Utils.getDegree(event.clientX - pos.x - mytim.cx, event.clientY - pos.y - mytim.cy, mytim.r)
+            var pos = myUtils.findOffset(cnvs)
+            var d = myUtils.getDegree(event.clientX - pos.x - mytim.cx, event.clientY - pos.y - mytim.cy, mytim.r)
             if (d != false) {
                 if (stat == 1) {
                     h = Math.floor(d / 30)
@@ -109,8 +109,8 @@
         } 
     }
     function minout(io) {
-        if (io) Utils.popShow("To adjust time, select the clock hand to ture around")
-        else Utils.popHide()
+        if (io) myUtils.popShow("To adjust time, select the clock hand to ture around")
+        else myUtils.popHide()
     }
     function up(event) {
         show(' ')
@@ -125,6 +125,5 @@
 Your browser does not support the HTML5 canvas tag.</canvas>
 <button onclick='reset()'>Reset Time</button>    
 </div>
-
 </body>
 </html>
