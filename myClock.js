@@ -56,7 +56,7 @@ function myClock(id) {
         var my_gradient=tctx.createRadialGradient(15,220,195,175,270,200)
         my_gradient.addColorStop(0,'white');
         my_gradient.addColorStop(0.6,"#dfefff")
-        my_gradient.addColorStop(1,"fcfcfc");
+        my_gradient.addColorStop(1,"#fcfcfc");
         tctx.fillStyle=my_gradient;
         tctx.fill()
         tctx.strokeStyle="#345678";
