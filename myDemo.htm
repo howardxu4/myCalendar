@@ -21,14 +21,30 @@
 <script src="myClock.js" type='text/javascript'></script>
 <script src="myUtils.js" type='text/javascript'></script>
 <script>
-    var mycal, mytim, tmer, h, m, s, dt, info, cnvs, dg;
+    var mycal, mytim, tmer, h, m, s, dt, info, cnvs, dg, pm;
     var stat = 0
+    function show(msg) {
+        info.innerHTML = msg
+    }
+    function mycallback(y,mon,d) {
+        dt = new Date(y,mon,d, h, m, s)
+        show( dt )
+    }    
+    function initCal() {
+        mycal = new myCalendar();
+        mycal.unsetAuto()
+        mycal.setPos(100, -100)
+        var obj = document.getElementById("cal")
+        mycal.init( "mycal", obj, mycallback )
+    }
+    
     function reset() {
         dt = new Date()
         h = dt.getHours()
         m = dt.getMinutes()
         s = dt.getSeconds()
-    }
+        pm = (h>11)? true:false
+    }    
     function startClock () {
         s++
         if (s == 60) {
@@ -37,26 +53,14 @@
             if (m == 60) {
                 m = 0;
                 h = (h+1)%24
+                pm = (h>11)? true:false
             }
         }
         mytim.setTime(h,m,s);
         mytim.drawAll()
         tmer = setTimeout(startClock,1000);
     }
-    function show(msg) {
-        info.innerHTML = msg
-    }
-    function mycallback(y,mon,d) {
-        dt = new Date(y,mon,d, h, m, s)
-        show( dt )
-    }
-    function init() {
-        mycal = new myCalendar();
-        mycal.unsetAuto()
-        mycal.setPos(100, -100)
-        var obj = document.getElementById("cal")
-        mycal.init( "mycal", obj, mycallback )
-    
+    function initTim() {
         info = document.getElementById('info')
         cnvs = document.getElementById('myCanvas')
         mytim = new myClock("myCanvas")
@@ -64,7 +68,11 @@
         mytim.setTime(h,m,s)      
         startClock()
         myUtils.popPos(cnvs, 0, 170)
-    }      
+    }  
+    function init() {
+        initCal()
+        initTim()
+    }
     function down(event) {
         var pos = myUtils.findOffset(cnvs)
         var px = event.clientX - pos.x - mytim.cx 
@@ -96,11 +104,13 @@
                 if (stat == 1) {
                     h = Math.floor(d / 30)
                     m = (d % 30) * 2
+                    if ((d < 30 && dg > 330) || (d > 330 && dg < 30)) pm = !pm
+                    if (pm) h += 12
                 }
                 else {
                     m = Math.floor(d / 6)
-                    if ( d < 30 && dg > 300) h = (h+1)%24
-                    else if(d > 300 && dg < 30) h = (h -1 + 24)%24
+                    if ( d < 30 && dg > 330) h = (h+1)%24
+                    else if(d > 330 && dg < 30) h = (h -1 + 24)%24
                 }
                 mytim.setTime(h,m,s)
                 mytim.drawAll()
