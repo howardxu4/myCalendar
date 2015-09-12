@@ -92,7 +92,7 @@
     },
     popShow : function(msg, id, x, y, t) {
         if (this.timer != null) clearTimeout(this.timer)
-        this.popPos(id, x, y);
+        this.popPos(id, x, y, t);
         this.myPop.innerHTML = msg;
         this.myPop.style.display = 'block'
         this.timer = setTimeout("myUtils.popHide()", this.timeout);
